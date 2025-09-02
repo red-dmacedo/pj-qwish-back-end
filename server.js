@@ -5,7 +5,7 @@ const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
 const logger = require('morgan');
-const testJwtRouter = require('./controllers/test-jwt');
+// const testJwtRouter = require('./controllers/test-jwt');
 const authRouter = require('./controllers/auth');
 const usersRouter = require('./controllers/users.js');
 const listsRouter = require('./controllers/lists.js');
@@ -25,7 +25,7 @@ app.use(logger('dev'));
 
 // Routes go here
 app.use('/auth', authRouter);
-app.use('/test-jwt', testJwtRouter);
+// app.use('/test-jwt', testJwtRouter);
 app.use('/users', usersRouter);
 app.use('/lists', listsRouter);
 app.use('/items', itemsRouter);
