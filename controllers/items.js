@@ -2,82 +2,81 @@ const Item = require('../models/item.js');
 const express = require('express');
 const router = express.Router();
 
+const handleError = (res, err) => {
+  switch (res.statusCode) {
+    case 404:
+      res.json({ err: err.message });
+      break;
+    default:
+      res.status(500).json({ err: err.message });
+  };
+};
+
+const evalSend = (res, sendObject, successCode = 200) => {
+  if (!sendObject) {
+    res.status(404);
+    throw new Error('Data not found');
+  };
+
+  return res.status(successCode).json(sendObject);
+};
+
 router.post('/', async (req, res) => { // create or retrieve an item
   try {
     const preExistingItem = await Item.findOne({ product_id: req.body.product_id });
-    if (preExistingItem) { return res.status(201).json(preExistingItem) }
+    if (preExistingItem) { evalSend(res, preExistingItem, 201) }
     else {
       const createdItem = await Item.create(req.body);
-      res.status(201).json(createdItem);
+      evalSend(res, createdItem, 201);
     };
   } catch (err) {
-    res.status(500).json({ err: err.message });
+    handleError(res, err);
   };
 });
 
 router.get('/', async (req, res) => { // get all items in the database
   try {
     const foundItems = await Item.find();
-    res.status(200).json(foundItems);
+    evalSend(res, foundItems);
   } catch (err) {
-    res.status(500).json({ err: err.message });
+    handleError(res, err);
   };
 });
 
 router.get('/:itemId', async (req, res) => { // get specific item
   try {
-    const foundItem = await Item.findById(req.params.itemId);
-    if (!foundItem) {
-      res.status(404);
-      throw new Error('Item not found.');
-    }
-    res.status(200).json(foundItem);
+    const { itemId } = req.params;
+    const foundItem = await Item.findById(itemId);
+    evalSend(res, foundItem);
   } catch (err) {
-    if (res.statusCode === 404) {
-      res.json({ err: err.message });
-    } else {
-      res.status(500).json({ err: err.message });
-    };
+    handleError(res, err);
   };
 });
 
 router.delete('/:itemId', async (req, res) => { // delete an item
   try {
     const deletedItem = await Item.findByIdAndDelete(req.params.itemId);
-
-    if (!deletedItem) {
-      return res.status(404).json({ error: 'Item not found' });
-    }
-    res.status(200).json(deletedItem);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'An error occured while deleting the item' });
+    evalSend(res, deletedItem);
+  } catch (err) {
+    handleError(res, err);
   };
 });
 
 router.put('/:itemId', async (req, res) => { // update an item
   try {
     const updatedItem = await Item.findByIdAndUpdate(req.params.itemId, req.body, { new: true });
-    if (!updatedItem) {
-      res.status(404);
-      throw new Error('Item not found.');
-    };
-    res.status(200).json(updatedItem);
+    evalSend(res, updatedItem);
   } catch (err) {
-    if (res.statusCode === 404) {
-      res.json({ err: err.message });
-    } else {
-      res.status(500).json({ err: err.message });
-    };
+    handleError(res, err);
   }
 });
 
 router.post('/many', async (req, res) => { // retrieve array of items
   try {
-    const foundItems = await Item.find({ _id: req.body.itemIds })
-    res.status(200).json(foundItems);
+    const foundItems = await Item.find({ _id: req.body.itemIds });
+    evalSend(res, foundItems);
   } catch (err) {
-    res.status(500).json({ err: err.message });
+    handleError(res, err);
   };
 });
 
