@@ -3,12 +3,12 @@ const verifyToken = require("../middleware/verify-token.js");
 const router = express.Router();
 const List = require("../models/list.js");
 const Item = require('../models/item.js');
+const { handleError, evalSend } = require('../modules/helpers.js');
 
 router.get("/", verifyToken, async (req, res) => { // get all lists
   try {
-    // only yours lists, without ones shared with you
-    const allLists = await List.find({ author: req.user._id });
-    return res.status(200).json(allLists);
+    const lists = await List.find({ author: req.user._id });
+    return res.status(200).json(lists);
   } catch (e) {
     console.error(e);
     return res.sendStatus(500);
