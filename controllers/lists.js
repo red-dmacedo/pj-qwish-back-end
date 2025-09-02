@@ -5,7 +5,6 @@ const List = require("../models/list.js");
 const Item = require('../models/item.js');
 const helpers = require('../modules/helpers.js');
 const { handleError, evalSend, expandListItems } = helpers;
-// const { handleError, evalSend, expandListItems } = require('../modules/helpers.js');
 
 router.get("/", verifyToken, async (req, res) => { // get all lists
   try {
