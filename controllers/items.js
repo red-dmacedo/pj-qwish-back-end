@@ -9,7 +9,7 @@ router.post('/', async (req, res) => { // create or retrieve an item
     if (preExistingItem) { evalSend(res, preExistingItem, 201) }
     else {
       const createdItem = await Item.create(req.body);
-      evalSend(res, createdItem, 201);
+      evalSend(res, createdItem, 404, 201);
     };
   } catch (err) {
     handleError(res, err);

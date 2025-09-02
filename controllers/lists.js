@@ -3,7 +3,7 @@ const verifyToken = require("../middleware/verify-token.js");
 const router = express.Router();
 const List = require("../models/list.js");
 const Item = require('../models/item.js');
-const { handleError, evalSend } = require('../modules/helpers.js');
+const { handleError, evalSend, expandListItems } = require('../modules/helpers.js');
 
 router.get("/", verifyToken, async (req, res) => { // get all lists
   try {
@@ -28,7 +28,7 @@ router.post("/", verifyToken, async (req, res) => { // create a list
 router.get("/shared", verifyToken, async (req, res) => { // get lists shared with the logged-in user
   try {
     const sharedLists = await List.find({ sharedWith: req.user._id });
-    evalSend(res, newList);
+    evalSend(res, sharedLists);
   } catch (err) {
     handleError(err);
   };
@@ -39,9 +39,14 @@ router.get("/:listId", verifyToken, async (req, res) => { // get specific list
     const { listId } = req.params;
     const list = await List.findById(listId);
     if (!list) {
+      evalSend(res, list)
+    } else {
+      expandListItems(list);
       evalSend(res, list);
     };
 
+    /*
+    ***** removed in favor of expandListItems() *****
     list.items = list.items.filter(el => el._id); // remove blank entries if they exist (safety check)
 
     // Add full items to the list
@@ -51,8 +56,8 @@ router.get("/:listId", verifyToken, async (req, res) => { // get specific list
     for (let [idx, itm] of list.items.entries()) {
       Object.assign(itm, items[idx]);
     };
+    */
 
-    evalSend(res, newList);
   } catch (err) {
     handleError(res, err);
   };
