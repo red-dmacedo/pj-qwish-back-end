@@ -3,7 +3,8 @@ const verifyToken = require("../middleware/verify-token.js");
 const router = express.Router();
 const List = require("../models/list.js");
 const Item = require('../models/item.js');
-const { handleError, evalSend, expandListItems } = require('../modules/helpers.js');
+import { handleError, evalSend, expandListItems } from '../modules/helpers.js';
+// const { handleError, evalSend, expandListItems } = require('../modules/helpers.js');
 
 router.get("/", verifyToken, async (req, res) => { // get all lists
   try {
