@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
-const reqTypes = require('../modules/reqTypes');
+const {reqString} = require('../modules/reqTypes');
 
 const listSchema = new mongoose.Schema(
   {
-    name: reqTypes.string,
+    name: reqString,
     author: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true, },
     items: [{
       _id: { type: mongoose.Schema.Types.ObjectId, ref: "Item", },

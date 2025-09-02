@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const reqTypes = {
-  string: { type: String, required: true },
-  date: { type: Date, required: true },
-  number: { type: Number, required: true },
+  reqString: { type: String, required: true },
+  reqDate: { type: Date, required: true },
+  reqNumber: { type: Number, required: true },
 };
 
 export default reqTypes;

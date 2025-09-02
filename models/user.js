@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
-const reqTypes = require('../modules/reqTypes');
+const { reqString } = require('../modules/reqTypes');
 
 const userSchema = new mongoose.Schema({
-  username: reqTypes.string,
-  hashedPassword: reqTypes.string,
-  firstName: reqTypes.string,
-  lastName: reqTypes.string,
+  username: reqString,
+  hashedPassword: reqString,
+  firstName: reqString,
+  lastName: reqString,
   friendsList: [mongoose.SchemaTypes.ObjectId],
 });
 
