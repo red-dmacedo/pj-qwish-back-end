@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const reqTypes = require('./reqTypes');
+const reqTypes = require('../modules/reqTypes');
 
 const itemSchema = mongoose.Schema({
   product_id: reqTypes.string,
