@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const {reqString} = require('../modules/reqTypes');
+const { reqString } = require('../modules/reqTypes');
 
 const listSchema = new mongoose.Schema(
   {

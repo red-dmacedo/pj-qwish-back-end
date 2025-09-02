@@ -3,7 +3,8 @@ const verifyToken = require("../middleware/verify-token.js");
 const router = express.Router();
 const List = require("../models/list.js");
 const Item = require('../models/item.js');
-import { handleError, evalSend, expandListItems } from '../modules/helpers.js';
+const helpers = require('../modules/helpers.js');
+const { handleError, evalSend, expandListItems } = helpers;
 // const { handleError, evalSend, expandListItems } = require('../modules/helpers.js');
 
 router.get("/", verifyToken, async (req, res) => { // get all lists
@@ -18,7 +19,6 @@ router.get("/", verifyToken, async (req, res) => { // get all lists
 router.post("/", verifyToken, async (req, res) => { // create a list
   try {
     req.body.author = req.user._id; // assign author (only needed until the front-end is updated to include it)
-
     const newList = await List.create(req.body);
     evalSend(res, newList);
   } catch (err) {
@@ -42,23 +42,9 @@ router.get("/:listId", verifyToken, async (req, res) => { // get specific list
     if (!list) {
       evalSend(res, list)
     } else {
-      expandListItems(list);
-      evalSend(res, list);
+      const fullList = await expandListItems(list);
+      evalSend(res, fullList);
     };
-
-    /*
-    ***** removed in favor of expandListItems() *****
-    list.items = list.items.filter(el => el._id); // remove blank entries if they exist (safety check)
-
-    // Add full items to the list
-    const itemIds = list.items.map(el => el._id);
-    const items = await Item.find({ _id: itemIds });
-
-    for (let [idx, itm] of list.items.entries()) {
-      Object.assign(itm, items[idx]);
-    };
-    */
-
   } catch (err) {
     handleError(res, err);
   };

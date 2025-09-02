@@ -1,8 +1,8 @@
 const Item = require('../models/item.js');
 const express = require('express');
 const router = express.Router();
-import { handleError, evalSend, expandListItems } from '../modules/helpers.js';
-// const { handleError, evalSend, expandListItems } = require('../modules/helpers.js');
+const helpers = require('../modules/helpers.js');
+const { handleError, evalSend } = helpers;
 
 router.post('/', async (req, res) => { // create or retrieve an item
   try {

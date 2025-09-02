@@ -1,5 +1,5 @@
-const List = require("../models/list.js");
-const Item = require('../models/item.js');
+const List = require("../models/list");
+const Item = require('../models/item');
 
 const handleError = (res, err) => {
   res.json({ err: err.message });
@@ -24,9 +24,11 @@ const expandListItems = async (list) => {
   for (let [idx, itm] of list.items.entries()) {
     Object.assign(itm, items[idx]);
   };
+
+  return list;
 };
 
-export {
+module.exports = {
   handleError,
   evalSend,
   expandListItems,
